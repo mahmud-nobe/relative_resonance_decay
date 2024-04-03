@@ -28,18 +28,18 @@ Lab frame: eta=[-0.5,0.5] (uniform), phi=isotropic, sqrt(sNN) = 200 GeV/c
 
 - Write an analysis macro: Invariant Mass calculation: to identify/confirm the resonance
 - Additions:
-i) implement gaussian smearing of uncertainties in momentum (mimic detector resolution)
+i) Implement Gaussian smearing of uncertainties in momentum (mimic detector resolution)
 ii) Add uncorrelated background
 
 **Hints:**
-- We need a 4 mom. vector (look at TLorentzVector),
+- We need a 4 momentum vector (look at TLorentzVector),
 - beneficial to extend this by creating our own track class allowing to store further information like
 particle type
 - A good starting point for an event class we did in Lecture 10
 
 **Preparations:**
 - What is needed and how do you want to store/generate?
-  - Track class, Event class, containers/trees ... ?
+  - Track class, Event class, containers/trees ...?
 - Prepare a short outline of what functionalities the classes need and
 - a quick flow chart of the project itself
 
