@@ -1,5 +1,5 @@
 # Final Project
-## Relative_Resonance_Decay
+## Relativec Resonance Decay
 Final Project for Computational Physics Course to measure the resonance decay of a particle generator.
 
 ### Group 2 Members: 
