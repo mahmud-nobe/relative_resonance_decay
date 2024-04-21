@@ -1,4 +1,4 @@
-General Steps for Simulations:
+## Steps for Simulations:
 
 1. Choose the mass and width of the resonance particle (res_mass, res_with)
 
@@ -25,5 +25,11 @@ General Steps for Simulations:
 8. Do step 2-7 for n_events number of time and save the results in a ROOT file and show in the histogram
 
 9. (Optional 1) For each of the event, add an uncorrelated background event
-	- randomly select a invariant mass from an uniform distribution around the 
+	- randomly select a invariant mass from an uniform distribution around the our invariant mass
+	
+10. (Optional 2) Add a Gaussian Smearing to the final fourmomentum of the daughter particles 
+	- (so the invariant mass will also have random fluctuations)
+	- After step 6, we can set the mean as the actual momentum and std as 0.05% of the momentum; Then randomly generate a value from that gaussian distribution.
+	
+
 	
