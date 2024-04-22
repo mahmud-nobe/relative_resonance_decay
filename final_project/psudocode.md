@@ -1,6 +1,7 @@
 There are **three** important parts of the codes:
 
-## FourMomentum class: to store the four momentum and related functions:
+## FourMomentum class: 
+To store the four momentum and related functions.
 
 ### Members:
 1. 4D vector (using TLorentzVector from ROOT)
@@ -13,9 +14,11 @@ There are **three** important parts of the codes:
 - Constructor with four double numbers for four component and particle code
 - Constructir with a 4D Lorentz vector and particle code
 
-#### Setter: SetPx, SetPy, SetPz, SetE, SetPDG
+#### Setter: 
+SetPx, SetPy, SetPz, SetE, SetPDG
 
-#### Getter: GetPx, GetPy, GetPz, GetE, GetPDG
+#### Getter: 
+GetPx, GetPy, GetPz, GetE, GetPDG
 
 #### Operators:
 - **+** operator to add two four momentum
