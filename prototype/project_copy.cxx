@@ -66,6 +66,7 @@ class FourMomentum {
 	
 	//operators
 	FourMomentum operator + (FourMomentum &);
+	FourMomentum operator - (FourMomentum &);
 
       void Print() const {
          std::cout << "(" << Px() << ", " << Py() << ", " << Pz() << ", " << E() << ")" << std::endl;
@@ -91,6 +92,11 @@ FourMomentum FourMomentum::Boost(const FourMomentum& resonance)
 FourMomentum FourMomentum::operator+(FourMomentum &m)
 {
 	return FourMomentum(vec.Px()+m.Px(),vec.Py()+m.Py(),vec.Pz()+m.Pz(),vec.E()+m.E(), pdgCode);
+}
+
+FourMomentum FourMomentum::operator-(FourMomentum &m)
+{
+	return FourMomentum(vec.Px()-m.Px(),vec.Py()-m.Py(),vec.Pz()-m.Pz(),vec.E()-m.E(), pdgCode);
 }
 
 
