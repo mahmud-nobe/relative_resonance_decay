@@ -27,7 +27,7 @@ const int PDG_PROTON = 2212; // PDG code of the proton
 const int PDG_PION = 211; // PDG code of the pion
 
 // Define the collision energy
-const double SQRT_SNN = 100.0; // Center-of-mass energy in GeV
+const double SQRT_SNN = 200.0; // Center-of-mass energy in GeV
 
 // Define the momentum resolution
 //const double MOM_RES = 0.0000001; // Momentum resolution (1%)
@@ -173,8 +173,7 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
     }
    
    
-    
-    
+   
     
 
     // Calculate the invariant mass of the daughter particles
