@@ -114,8 +114,9 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance) {
     double M = resonance.M();
    
     // Generate random decay angles in the rest frame
-    double theta = acos(2.0*rand()/RAND_MAX - 1.0);
-    double phi = 2.0*3.14159*rand()/RAND_MAX;
+    // rand()/RAND_MAX --> any random number between 0 and 1
+    double theta = acos(2.0*rand()/RAND_MAX - 1.0); // arccos( uniform distribution between -1 and 1 )
+    double phi = 2.0*3.14159*rand()/RAND_MAX;  // uniform distribution between 0 and 2pi
 
     // Calculate the momentum of the daughter particles in the rest frame
     double P_d = sqrt((M*M - M_PROTON*M_PROTON - M_PION*M_PION)*(M*M - M_PROTON*M_PROTON - M_PION*M_PION)
