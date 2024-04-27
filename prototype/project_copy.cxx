@@ -42,44 +42,14 @@ class FourMomentum {
       FourMomentum(double px, double py, double pz, double e, int pdgCode_) : vec(px, py, pz, e), pdgCode(pdgCode_) {}
       FourMomentum(TLorentzVector v, int pdgCode_) : vec(v), pdgCode(pdgCode_) {}
 	
-	
+	// Getters
       TLorentzVector L_vec() const {return vec;}
       double Px() const { return vec.Px(); }
       double Py() const { return vec.Py(); }
       double Pz() const { return vec.Pz(); }
       double E() const { return vec.E(); }
 
-      FourMomentum Boost(const FourMomentum& resonance) {
-      	 // get the boost vector from the resonace fourMomentum
-      	 // boost_v = Px/E, Py/E, Pz/E
-         TVector3 boost_v = resonance.L_vec().BoostVector();
-         
-         // Make a copy of the current Lorentz Vector 
-         TLorentzVector new_vec = vec;
-         
-         // Boost this Lorentz Vector using boost_v
-	 	 new_vec.Boost(boost_v); // in place boosted momentum
-	
-         return FourMomentum(new_vec, pdgCode);
-      }
       
-      /*FourMomentum Boost(FourMomentum resonance) {
-         TVector3 MyParticle_BoostVector = (resonance.vec).BoostVector();
-	 TLorentzVector MyParticle1_newSys = resonance.vec;
-	 .Boost(MyParticle_BoostVector);
-         return FourMomentum(MyParticle1_newSys, pdgCode);
-      }*/
-      /*void Boost(TLorentzVector& vec, const TVector3& boostvec) {
-    	double beta = boostvec.Mag() / boostvec.Mag2();
-    vec.Boost(beta, boostvec);*/
-
-
-      /*FourMomentum Boost(cons TLorentzVector& p_boost) {
-         double bx = p_boost.Px() / p_boost.E();
-         double by = p_boost.Py() / p_boost.E();
-         double bz = p_boost.Pz() / p_boost.E();
-         return Boost(bx, by, bz);
-      }*/
       
       // Setters
     void SetPx(double px) { vec.SetPx(px); }
@@ -89,10 +59,11 @@ class FourMomentum {
     void SetPdgCode(int pdgCode_) { pdgCode = pdgCode_; }
 
     // Other functions
-    double Pt() const { return sqrt(vec.Px()*(vec.Px()) + vec.Py()*(vec.Py())); }
-    double P() const { return sqrt(vec.Px()*(vec.Px()) + vec.Py()*(vec.Py()) + vec.Pz()*(vec.Pz())); }
-    double M() const { return sqrt(vec.E()*(vec.E()) - vec.P()*(vec.P())); }
-	//FourMomentum Boost(double beta_res, double gamma_res);
+    double Pt() const { return vec.Pt(); } // sqrt(vec.Px()^2 + vec.Py()^2 )
+    double P() const { return vec.P(); } // sqrt( vec.Px()^2 + vec.Py()^2 + vec.Pz()^2 )
+    // dot product = invariant mass
+    double M() const { return vec.M(); } // sqrt( vec.E()^2 - vec.P()^2 )
+	FourMomentum Boost(const FourMomentum& resonance);
 	
 	//operators
 	FourMomentum operator + (FourMomentum &);
@@ -101,6 +72,22 @@ class FourMomentum {
          std::cout << "(" << Px() << ", " << Py() << ", " << Pz() << ", " << E() << ")" << std::endl;
       }
 };
+
+FourMomentum FourMomentum::Boost(const FourMomentum& resonance) 
+{
+	// get the boost vector from the resonace fourMomentum
+    // boost_v = Px/E, Py/E, Pz/E
+    TVector3 boost_v = resonance.L_vec().BoostVector();
+         
+    // Make a copy of the current Lorentz Vector 
+    TLorentzVector new_vec = vec;
+         
+    // Boost this Lorentz Vector using boost_v
+	new_vec.Boost(boost_v); // in place boosted momentum
+	
+    return FourMomentum(new_vec, pdgCode);
+}
+      
 
 FourMomentum FourMomentum::operator+(FourMomentum &m)
 {
