@@ -33,7 +33,8 @@ GetPx, GetPy, GetPz, GetE, GetPDG
 - get\_p_transfer(): transfer momentum
 - **Boost(FourMomentum &p):** returns the boosted FourMomentum using the lorentz matrix constructed using FourMomentum p.
 	- BoostVector p_b = Px/E, Py/E, Pz/E
-	- Boost: function from ![TLorentzVector](https://github.com/mahmud-nobe/relative_resonance_decay/blob/main/final_project/TLorentzVector_Boost.PNG)
+	- Boost: function from TLorentzVector:
+	![TLorentzVector_Boost](https://github.com/mahmud-nobe/relative_resonance_decay/blob/main/final_project/TLorentzVector_Boost.PNG)
  
 ## Resonace Decay Function: 
 - Returns the daughter particles' FourMomentums in lab frame (or maybe invariant mass)
