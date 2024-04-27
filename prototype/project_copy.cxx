@@ -39,6 +39,7 @@ class FourMomentum {
       int pdgCode;
 
    public:
+   // Constructor
       FourMomentum(double px, double py, double pz, double e, int pdgCode_) : vec(px, py, pz, e), pdgCode(pdgCode_) {}
       FourMomentum(TLorentzVector v, int pdgCode_) : vec(v), pdgCode(pdgCode_) {}
 	
@@ -48,8 +49,6 @@ class FourMomentum {
       double Py() const { return vec.Py(); }
       double Pz() const { return vec.Pz(); }
       double E() const { return vec.E(); }
-
-      
       
       // Setters
     void SetPx(double px) { vec.SetPx(px); }
@@ -95,17 +94,10 @@ FourMomentum FourMomentum::operator+(FourMomentum &m)
 }
 
 
-// Function to generate a random number according to a Breit-Wigner distribution
-
-double breit_wigner(double mean, double gamma) {
-    gRandom->SetSeed (0);
-    double bw = (float)gRandom->BreitWigner(mean, gamma);
-    return bw;
-}
 
 // Function to perform the resonance decay
 std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance) {
-    std::vector<FourMomentum> products;
+    std::vector<FourMomentum> daughters;
 
     // Get the momentum of the resonance in its rest frame
     
@@ -141,10 +133,10 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance) {
     FourMomentum pion_lab = pion.Boost(resonance);
    //cout<<proton_lab.Pz()<<endl;
     
-    products.push_back(proton_lab);
-    products.push_back(pion_lab);
+    daughters.push_back(proton_lab);
+    daughters.push_back(pion_lab);
 
-    return products;
+    return daughters;
 }
 
 
