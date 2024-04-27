@@ -11,7 +11,7 @@
 	
 4. Assume isotropic decay:
 	- eta: from an uniform distribution between -0.5,0.5 (use rand() function)
-	- phi: isotropic - uniform distribution from 0 to pi (use rand() function)
+	- phi: isotropic - uniform distribution from 0 to 2*pi (use rand() function)
 	
 5. Generate the daughter particles' FourMomentum in the resonance particle rest frame
 
