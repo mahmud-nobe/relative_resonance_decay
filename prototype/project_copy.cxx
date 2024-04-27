@@ -99,17 +99,14 @@ FourMomentum FourMomentum::operator+(FourMomentum &m)
 std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance) {
     std::vector<FourMomentum> daughters;
 
-    // Get the momentum of the resonance in its rest frame
+    // Input: the momentum of the resonance in its rest frame
+    // Output: the momentum of daughter particles in lab frame
     
     //FourMomentum resonance_lab = resonance.Boost(beta_res, gamma_res);
     double P_res = resonance.P();
     double E_res = resonance.E();
     double M = resonance.M();
-    double beta_res = P_res / E_res;
-    double gamma_res = E_res / M;
-    
-    //to boost to lab frame using TLorentzVector    
-
+   
     // Generate random decay angles in the rest frame
     double theta = acos(2.0*rand()/RAND_MAX - 1.0);
     double phi = 2.0*3.14159*rand()/RAND_MAX;
@@ -119,8 +116,6 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance) {
             - 4.0*M_PROTON*M_PROTON*M_PION*M_PION)/(2.0*M_RES);
     double E_d_PROTON = sqrt(P_d*P_d + M_PROTON*M_PROTON);
     double E_d_PION = sqrt(P_d*P_d + M_PION*M_PION);
-    //double beta_d = P_d / E_d_;
-    //double gamma_d = E_d / M_PROTON;
 
     //cout<<P_d<<" "<<E_d_PROTON<<endl;
     // Calculate the 4-momenta of the daughter particles in the rest frame
@@ -138,11 +133,6 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance) {
 
     return daughters;
 }
-
-
-
-
-
 
 
 int project_copy(int n_events = 10000, int n_bg = 10) {
