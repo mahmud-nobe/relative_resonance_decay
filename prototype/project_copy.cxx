@@ -18,13 +18,13 @@
 const double M_RES = 1.51942; // Resonance mass in GeV/c^2
 const double WIDTH_RES = 0.01573; // Resonance width in GeV/c^2
 //const double LIFETIME_RES = 2.632e-10; // Resonance lifetime in seconds
-//const int PDG_RES = 3122; // PDG code of the resonance (Lambda)
+const int PDG_RES = 3122; // PDG code of the resonance (Lambda)
 
 // Define the decay products and their properties
 const double M_NEUTRON = 0.9395654; // NEUTRON mass in GeV/c^2
 const double M_KAON = 0.497611; // KAON mass in GeV/c^2
-//const int PDG_NEUTRON = 2212; // PDG code of the NEUTRON
-//const int PDG_KAON = 211; // PDG code of the KAON
+const int PDG_NEUTRON = 2212; // PDG code of the NEUTRON
+const int PDG_KAON = 211; // PDG code of the KAON
 
 // Define the collision energy
 const double SQRT_SNN = 200.0; // Center-of-mass energy in GeV
@@ -115,9 +115,8 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance) {
    
     // Generate random decay angles in the rest frame
     // rand()/RAND_MAX --> any random number between 0 and 1
-    double theta = acos(2.0*rand()/RAND_MAX - 1.0); // arccos( uniform distribution between -1 and 1 )
     double phi = 2.0*3.14159*rand()/RAND_MAX;  // uniform distribution between 0 and 2pi
-    double eta = rand()/RAND_MAX - 0.5 // eta [-0.5, 0.5]
+    double eta = rand()/RAND_MAX - 0.5; // eta [-0.5, 0.5]
 
     // Calculate the momentum of the daughter particles in the rest frame
     double P_d = sqrt((M*M - M_NEUTRON*M_NEUTRON - M_KAON*M_KAON)*(M*M - M_NEUTRON*M_NEUTRON - M_KAON*M_KAON)
