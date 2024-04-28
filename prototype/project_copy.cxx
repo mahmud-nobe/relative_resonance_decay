@@ -34,6 +34,7 @@ const double SQRT_SNN = 200.0; // Center-of-mass energy in GeV
 
 // Define the momentum resolution
 //const double MOM_RES = 0.0000001; // Momentum resolution (1%)
+const double MOM_WIDTH = 0.0000005; // std for gaussian smearing of daughter momentum
 
 ///////////////////////////////////
 // FourMomentum Class Definition //
@@ -46,7 +47,7 @@ class FourMomentum {
 
    public:
       // Constructor
-      FourMomentum() // Default Constuctor
+      FourMomentum(); // Default Constuctor
       // Constructor with four components and particle type
  	  	FourMomentum(double px, double py, double pz, double e, int pdgCode_) : vec(px, py, pz, e), pdgCode(pdgCode_) {}
  	  	// Constructor with Lorentz vector and particle type
@@ -178,7 +179,7 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 		const int N_BG = n_bg; // Number of background particles per event
 
     // Initialize histograms for the invariant mass and background
-    TFile *f=new TFile("lorenz.root","RECREATE");
+    //TFile *f=new TFile("lorenz.root","RECREATE");
     TH1F* h_mass = new TH1F("h_mass", "Invariant Mass", 100, 1.4, 1.6);
     TH1F* h_bg = new TH1F("h_bg", "Background", 100, 1.4, 1.6);
 
@@ -202,10 +203,10 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 	
     		// Add Gaussian smearing to the daughter particle momenta (data is too sensitive to handle, so didn't do it)
 		  	for (auto& daughter : daughters) {
-		      	//daughter.SetPx(rng.Gaus(daughter.Px(), daughter.Px()*0.00005));
-		      	//daughter.SetPy(rng.Gaus(daughter.Py(), daughter.Py()*0.00005));
-		      	//daughter.SetPz(rng.Gaus(daughter.Pz(), daughter.Pz()*0.00005));
-		      	//daughter.SetE(abs(rng.Gaus(daughter.E(), daughter.E()*0.00005)));
+		      	daughter.SetPx(rng.Gaus(daughter.Px(), daughter.Px()*MOM_WIDTH));
+		      	daughter.SetPy(rng.Gaus(daughter.Py(), daughter.Py()*MOM_WIDTH));
+		      	daughter.SetPz(rng.Gaus(daughter.Pz(), daughter.Pz()*MOM_WIDTH));
+		      	daughter.SetE(abs(rng.Gaus(daughter.E(), daughter.E()*MOM_WIDTH)));
 		  	}
    
    
@@ -214,8 +215,8 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 		 		double inv_mass = (daughters[0] + daughters[1]).M();
 		
 		  	// Fill the invariant mass histogram
-		  	//h_mass->Fill(inv_mass);
-		  	h_mass->Fill(rng.Gaus(inv_mass, inv_mass*0.005));
+		  	h_mass->Fill(inv_mass);
+		  	// h_mass->Fill(rng.Gaus(inv_mass, inv_mass*0.005));
 
 		  	// Generate uncorrelated background events
 		  	int j=0;
