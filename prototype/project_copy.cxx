@@ -119,8 +119,10 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance) {
     double eta = rand()/RAND_MAX - 0.5; // eta [-0.5, 0.5]
 
     // Calculate the momentum of the daughter particles in the rest frame
-    double P_d = sqrt((M*M - M_NEUTRON*M_NEUTRON - M_KAON*M_KAON)*(M*M - M_NEUTRON*M_NEUTRON - M_KAON*M_KAON)
-            - 4.0*M_NEUTRON*M_NEUTRON*M_KAON*M_KAON)/(2.0*M_RES);
+    double P_d = sqrt((M*M - M_NEUTRON*M_NEUTRON - M_KAON*M_KAON)*(M*M - M_NEUTRON*M_NEUTRON - M_KAON*M_KAON) - 4.0*M_NEUTRON*M_NEUTRON*M_KAON*M_KAON)/(2.0*M_RES);
+    
+    // double P_d = sqrt( ( pow(M_RES, 2) - pow(M_NEUTRON - M_KAON, 2) ) * ( pow(M_RES, 2) - pow(M_NEUTRON + M_KAON, 2) ) ) / 2*M_RES;
+    
     double E_d_NEUTRON = sqrt(P_d*P_d + M_NEUTRON*M_NEUTRON);
     double E_d_KAON = sqrt(P_d*P_d + M_KAON*M_KAON);
     
@@ -151,8 +153,8 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 
     // Initialize histograms for the invariant mass and background
     TFile *f=new TFile("lorenz.root","RECREATE");
-    TH1F* h_mass = new TH1F("h_mass", "Invariant Mass", 100, 1.49, 1.55);
-    TH1F* h_bg = new TH1F("h_bg", "Background", 100, 1.49, 1.55);
+    TH1F* h_mass = new TH1F("h_mass", "Invariant Mass", 100, 1.4, 1.6);
+    TH1F* h_bg = new TH1F("h_bg", "Background", 100, 1.4, 1.6);
 
     // Initialize the random number generator
     TRandom3 rng;
