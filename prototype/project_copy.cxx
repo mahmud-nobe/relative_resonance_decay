@@ -237,6 +237,12 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 		
 		h_bg->SetLineColor(kBlue);
 		h_bg->Draw("SAME");
+		
+   	auto legend = new TLegend();
+   	legend->AddEntry(h_mass,"Resonance Signal","l");
+   	legend->AddEntry(h_bg,"Background","l");
+   	legend->Draw();
+	
 		//f->Write();
 		//f->Close();
 		// Print the number of signal and background events in the signal region
