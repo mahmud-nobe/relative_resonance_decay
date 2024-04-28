@@ -132,8 +132,8 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance, int boos
    
     // Generate random decay angles in the rest frame
     // rand()/RAND_MAX --> any random number between 0 and 1
+    double theta = acos(2.0*rand()/RAND_MAX - 1.0); // cos theta between [-1, 1]
     double phi = 2.0*3.14159*rand()/RAND_MAX;  // uniform distribution between 0 and 2pi
-    double eta = rand()/RAND_MAX - 0.5; // eta [-0.5, 0.5]
 
     // Calculate the momentum of the daughter particles in the rest frame
     double P_d = sqrt((M*M - M_NEUTRON*M_NEUTRON - M_KAON*M_KAON)*(M*M - M_NEUTRON*M_NEUTRON - M_KAON*M_KAON) - 4.0*M_NEUTRON*M_NEUTRON*M_KAON*M_KAON)/(2.0*M_RES);
@@ -143,11 +143,10 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance, int boos
     double E_d_NEUTRON = sqrt(P_d*P_d + M_NEUTRON*M_NEUTRON);
     double E_d_KAON = sqrt(P_d*P_d + M_KAON*M_KAON);
     
-    double P_T = P_d / cosh(eta);
 
     // Calculate the 4-momenta of the daughter particles in the rest frame
-    FourMomentum neutron(P_T*cos(phi), P_T*sin(phi), P_T*sinh(eta), E_d_NEUTRON, PDG_NEUTRON);
-    FourMomentum kaon(-P_T*cos(phi), -P_T*sin(phi), -P_T*sinh(eta), E_d_KAON, PDG_KAON);
+    FourMomentum neutron(P_d*sin(theta)*cos(phi), P_d*sin(theta)*sin(phi), P_d*cos(theta), E_d_NEUTRON, PDG_NEUTRON);
+    FourMomentum kaon(-P_d*sin(theta)*cos(phi), -P_d*sin(theta)*sin(phi), -P_d*cos(theta), E_d_KAON, PDG_KAON);
 
 		// Boost the daughter particles to the lab frame
 		FourMomentum neutron_lab = neutron.Boost(resonance);
@@ -164,6 +163,26 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance, int boos
     
     
     return daughters;
+}
+
+////////////////////////////////
+// Parent Generation Function //
+////////////////////////////////
+
+FourMomentum GetParentMomentum(double m_res){
+
+		// Generate random decay angles in the rest frame
+    // rand()/RAND_MAX --> any random number between 0 and 1
+    double phi = 2.0*3.14159*rand()/RAND_MAX;  // uniform distribution between 0 and 2pi
+    double eta = rand()/RAND_MAX - 0.5; // eta [-0.5, 0.5]
+    
+    double P_T = 2; // 2 GeV/c^2
+    double m_T = sqrt( P_T*P_T + m_res*m_res);
+    
+    // Calculate the 4-momenta of the resonance particles in the rest frame
+    FourMomentum resonance(P_T*cos(phi), P_T*sin(phi), m_T*sinh(eta), m_T*cosh(eta), PDG_RES);
+   
+   	return resonance;
 }
 
 ///////////////////////////
@@ -198,7 +217,7 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
     
         // Generate a resonance particle
         double m_res = (float)gRandom->BreitWigner(M_RES, WIDTH_RES);
-        FourMomentum resonance(0,0, SQRT_SNN/(2),sqrt((SQRT_SNN*SQRT_SNN/4)+m_res*m_res), PDG_RES);
+        FourMomentum resonance = GetParentMomentum(m_res);
 
         // Decay the resonance particle
     		std::vector<FourMomentum> daughters = ResonanceDecay(resonance);
