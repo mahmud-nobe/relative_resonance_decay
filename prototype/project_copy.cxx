@@ -15,16 +15,16 @@
 
 
 // Define the resonance particle and its properties
-const double M_RES = 1.115683; // Resonance mass in GeV/c^2
-const double WIDTH_RES = 0.0249; // Resonance width in GeV/c^2
-const double LIFETIME_RES = 2.632e-10; // Resonance lifetime in seconds
-const int PDG_RES = 3122; // PDG code of the resonance (Lambda)
+const double M_RES = 1.51942; // Resonance mass in GeV/c^2
+const double WIDTH_RES = 0.01573; // Resonance width in GeV/c^2
+//const double LIFETIME_RES = 2.632e-10; // Resonance lifetime in seconds
+//const int PDG_RES = 3122; // PDG code of the resonance (Lambda)
 
 // Define the decay products and their properties
-const double M_NEUTRON = 0.938272; // NEUTRON mass in GeV/c^2
-const double M_KAON = 0.139570; // KAON mass in GeV/c^2
-const int PDG_NEUTRON = 2212; // PDG code of the NEUTRON
-const int PDG_KAON = 211; // PDG code of the KAON
+const double M_NEUTRON = 0.9395654; // NEUTRON mass in GeV/c^2
+const double M_KAON = 0.497611; // KAON mass in GeV/c^2
+//const int PDG_NEUTRON = 2212; // PDG code of the NEUTRON
+//const int PDG_KAON = 211; // PDG code of the KAON
 
 // Define the collision energy
 const double SQRT_SNN = 200.0; // Center-of-mass energy in GeV
