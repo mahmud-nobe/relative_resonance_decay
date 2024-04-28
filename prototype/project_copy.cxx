@@ -117,17 +117,19 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance) {
     // rand()/RAND_MAX --> any random number between 0 and 1
     double theta = acos(2.0*rand()/RAND_MAX - 1.0); // arccos( uniform distribution between -1 and 1 )
     double phi = 2.0*3.14159*rand()/RAND_MAX;  // uniform distribution between 0 and 2pi
+    double eta = rand()/RAND_MAX - 0.5 // eta [-0.5, 0.5]
 
     // Calculate the momentum of the daughter particles in the rest frame
     double P_d = sqrt((M*M - M_PROTON*M_PROTON - M_PION*M_PION)*(M*M - M_PROTON*M_PROTON - M_PION*M_PION)
             - 4.0*M_PROTON*M_PROTON*M_PION*M_PION)/(2.0*M_RES);
     double E_d_PROTON = sqrt(P_d*P_d + M_PROTON*M_PROTON);
     double E_d_PION = sqrt(P_d*P_d + M_PION*M_PION);
+    
+    double P_T = P_d / cosh(eta);
 
-    //cout<<P_d<<" "<<E_d_PROTON<<endl;
     // Calculate the 4-momenta of the daughter particles in the rest frame
-    FourMomentum proton(P_d*sin(theta)*cos(phi), P_d*sin(theta)*sin(phi), P_d*cos(theta), E_d_PROTON, PDG_PROTON);
-    FourMomentum pion(-P_d*sin(theta)*cos(phi), -P_d*sin(theta)*sin(phi), -P_d*cos(theta), E_d_PION, PDG_PION);
+    FourMomentum proton(P_T*cos(phi), P_T*sin(phi), P_T*sinh(eta), E_d_PROTON, PDG_PROTON);
+    FourMomentum pion(-P_T*cos(phi), -P_T*sin(phi), -P_T*sinh(eta), E_d_PION, PDG_PION);
 
     //cout<< pion.Pz()<<" " <<endl;
     // Boost the daughter particles to the lab frame
@@ -159,6 +161,7 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 
     // Loop over events
     for (int i_event = 0; i_event < N_EVENTS; i_event++) {
+    
         // Generate a resonance particle
         double m_res = (float)gRandom->BreitWigner(M_RES, WIDTH_RES);
         // double m_res = breit_wigner(M_RES, WIDTH_RES);
@@ -166,39 +169,36 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 
         // Decay the resonance particle
        // std::vector
-    FourMomentum parent = resonance;
-    std::vector<FourMomentum> daughters = ResonanceDecay(parent);
+    	std::vector<FourMomentum> daughters = ResonanceDecay(resonance);
 
 	
 	
     // Add Gaussian smearing to the daughter particle momenta (data is too sensitive to handle, so didn't do it)
-    for (auto& daughter : daughters) {
-        //daughter.SetPx(rng.Gaus(daughter.Px(), daughter.Px()*0.00005));
-        //daughter.SetPy(rng.Gaus(daughter.Py(), daughter.Py()*0.00005));
-        //daughter.SetPz(rng.Gaus(daughter.Pz(), daughter.Pz()*0.00005));
-        //daughter.SetE(abs(rng.Gaus(daughter.E(), daughter.E()*0.00005)));
+    	for (auto& daughter : daughters) {
+        	//daughter.SetPx(rng.Gaus(daughter.Px(), daughter.Px()*0.00005));
+        	//daughter.SetPy(rng.Gaus(daughter.Py(), daughter.Py()*0.00005));
+        	//daughter.SetPz(rng.Gaus(daughter.Pz(), daughter.Pz()*0.00005));
+        	//daughter.SetE(abs(rng.Gaus(daughter.E(), daughter.E()*0.00005)));
+    	}
+   
+   
+
+    	// Calculate the invariant mass of the daughter particles
+   	double inv_mass = (daughters[0] + daughters[1]).M();
+	
+    	// Fill the invariant mass histogram
+    	//h_mass->Fill(inv_mass);
+    	h_mass->Fill(rng.Gaus(inv_mass, inv_mass*0.005));
+
+    	// Generate uncorrelated background events
+    	int j=0;
+    	while(j<N_BG){
+    		double bg_inv_mass = rng.Uniform(h_mass->GetXaxis()->GetXmin(), h_mass->GetXaxis()->GetXmax());
+    		h_bg->Fill(bg_inv_mass);
+    		j++;
+    	//h_mass->Fill(bg_inv_mass);
+	}
     }
-   
-   
-   
-    
-
-    // Calculate the invariant mass of the daughter particles
-    double inv_mass = (daughters[0] + daughters[1]).M();
-	//cout<<"SYED "<<inv_mass<<endl;
-    // Fill the invariant mass histogram
-    //h_mass->Fill(inv_mass);
-    h_mass->Fill(rng.Gaus(inv_mass, inv_mass*0.005));
-
-    // Generate uncorrelated background events
-    int j=0;
-    while(j<N_BG){
-    	double bg_inv_mass = rng.Uniform(h_mass->GetXaxis()->GetXmin(), h_mass->GetXaxis()->GetXmax());
-    	h_bg->Fill(bg_inv_mass);
-    	j++;
-    //h_mass->Fill(bg_inv_mass);
-	}
-	}
 	// Draw the histograms
 
 	//TCanvas* c1 = new TCanvas("c1", "c1", 800, 600);
