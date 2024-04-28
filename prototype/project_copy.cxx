@@ -122,7 +122,7 @@ FourMomentum FourMomentum::operator-(FourMomentum &m)
 // Input: the FourMomentum of the resonance in its rest frame
 // Output: the FourMomentums of daughter particles in lab frame
     
-std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance) {
+std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance, int boost = 1) {
     std::vector<FourMomentum> daughters;
     
     //FourMomentum resonance_lab = resonance.Boost(beta_res, gamma_res);
@@ -146,18 +146,23 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance) {
     double P_T = P_d / cosh(eta);
 
     // Calculate the 4-momenta of the daughter particles in the rest frame
-    FourMomentum NEUTRON(P_T*cos(phi), P_T*sin(phi), P_T*sinh(eta), E_d_NEUTRON, PDG_NEUTRON);
-    FourMomentum KAON(-P_T*cos(phi), -P_T*sin(phi), -P_T*sinh(eta), E_d_KAON, PDG_KAON);
+    FourMomentum neutron(P_T*cos(phi), P_T*sin(phi), P_T*sinh(eta), E_d_NEUTRON, PDG_NEUTRON);
+    FourMomentum kaon(-P_T*cos(phi), -P_T*sin(phi), -P_T*sinh(eta), E_d_KAON, PDG_KAON);
 
-    //cout<< KAON.Pz()<<" " <<endl;
-    // Boost the daughter particles to the lab frame
-    FourMomentum NEUTRON_lab = NEUTRON.Boost(resonance);
-    FourMomentum KAON_lab = KAON.Boost(resonance);
-   //cout<<NEUTRON_lab.Pz()<<endl;
+		// Boost the daughter particles to the lab frame
+		FourMomentum neutron_lab = neutron.Boost(resonance);
+		FourMomentum kaon_lab = kaon.Boost(resonance);
+
+    if (boost) {	// boosted momentum in lab frame			
+				daughters.push_back(neutron_lab);
+    		daughters.push_back(kaon_lab);
+		}
+		else{  // momentum in rest frame	 
+				daughters.push_back(neutron);
+    		daughters.push_back(kaon);
+		};
     
-    daughters.push_back(NEUTRON_lab);
-    daughters.push_back(KAON_lab);
-
+    
     return daughters;
 }
 
@@ -180,8 +185,9 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 
     // Initialize histograms for the invariant mass and background
     //TFile *f=new TFile("lorenz.root","RECREATE");
-    TH1F* h_mass = new TH1F("h_mass", "Invariant Mass", 100, 1.4, 1.6);
-    TH1F* h_bg = new TH1F("h_bg", "Background", 100, 1.4, 1.6);
+    TH1F* h_mass = new TH1F("h_mass", "Invariant Mass", 100, M_RES - 4*WIDTH_RES, M_RES + 4*WIDTH_RES);
+    TH1F* h_mass_rest = new TH1F("h_mass", "Invariant Mass", 100, M_RES - 4*WIDTH_RES, M_RES + 4*WIDTH_RES);
+    TH1F* h_bg = new TH1F("h_bg", "Background", 100, M_RES - 4*WIDTH_RES, M_RES + 4*WIDTH_RES);
 
     // Initialize the random number generator
     TRandom3 rng;
@@ -192,31 +198,32 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
     
         // Generate a resonance particle
         double m_res = (float)gRandom->BreitWigner(M_RES, WIDTH_RES);
-        // double m_res = breit_wigner(M_RES, WIDTH_RES);
         FourMomentum resonance(0,0, SQRT_SNN/(2),sqrt((SQRT_SNN*SQRT_SNN/4)+m_res*m_res), PDG_RES);
 
         // Decay the resonance particle
-       
     		std::vector<FourMomentum> daughters = ResonanceDecay(resonance);
+    		
+    		std::vector<FourMomentum> daughters_rest = ResonanceDecay(resonance, 0); // boost = 0  to get the rest frame momentum
 
 	
 	
-    		// Add Gaussian smearing to the daughter particle momenta (data is too sensitive to handle, so didn't do it)
+    		// Add Gaussian smearing to the daughter particle momenta
 		  	for (auto& daughter : daughters) {
 		      	daughter.SetPx(rng.Gaus(daughter.Px(), daughter.Px()*MOM_WIDTH));
 		      	daughter.SetPy(rng.Gaus(daughter.Py(), daughter.Py()*MOM_WIDTH));
 		      	daughter.SetPz(rng.Gaus(daughter.Pz(), daughter.Pz()*MOM_WIDTH));
 		      	daughter.SetE(abs(rng.Gaus(daughter.E(), daughter.E()*MOM_WIDTH)));
 		  	}
-   
-   
+  
 
 		  	// Calculate the invariant mass of the daughter particles
 		 		double inv_mass = (daughters[0] + daughters[1]).M();
+		 		double inv_mass_rest = (daughters_rest[0] + daughters_rest[1]).M();
 		
 		  	// Fill the invariant mass histogram
-		  	h_mass->Fill(inv_mass);
-		  	// h_mass->Fill(rng.Gaus(inv_mass, inv_mass*0.005));
+		  	// h_mass->Fill(inv_mass);
+		  	h_mass->Fill(rng.Gaus(inv_mass, inv_mass*0.005));
+		  	h_mass_rest->Fill(rng.Gaus(inv_mass, inv_mass*0.005));
 
 		  	// Generate uncorrelated background events
 		  	int j=0;
@@ -226,25 +233,31 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 		  		j++;
 				}
     }
+		
 		// Draw the histograms
 
-		//TCanvas* c1 = new TCanvas("c1", "c1", 800, 600);
 		h_mass->SetLineColor(kRed);
 		h_mass->GetXaxis()->SetTitle("Invariant Mass [GeV/c^{2}]");
 		h_mass->GetYaxis()->SetTitle("Counts");
 		h_mass->Add(h_bg);
 		h_mass->Draw();
 		
+		h_mass_rest->SetLineColor(kOrange);
+		h_mass_rest->Add(h_bg);
+		h_mass_rest->Draw("SAME");
+		
 		h_bg->SetLineColor(kBlue);
 		h_bg->Draw("SAME");
 		
    	auto legend = new TLegend();
    	legend->AddEntry(h_mass,"Resonance Signal","l");
+   	legend->AddEntry(h_mass_rest,"Resonance Signal (Rest Frame)","l");
    	legend->AddEntry(h_bg,"Background","l");
    	legend->Draw();
 	
 		//f->Write();
 		//f->Close();
+		
 		// Print the number of signal and background events in the signal region
 		double signal = h_mass->Integral(h_mass->FindBin(M_RES - 3.0*WIDTH_RES), h_mass->FindBin(M_RES + 3.0*WIDTH_RES));
 		double bg = h_bg->Integral(h_bg->FindBin(M_RES - 3.0*WIDTH_RES), h_bg->FindBin(M_RES + 3.0*WIDTH_RES));
