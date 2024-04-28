@@ -36,6 +36,11 @@ GetPx, GetPy, GetPz, GetE, GetPDG
 	- Boost: function from TLorentzVector:
 	![TLorentzVector_Boost](https://github.com/mahmud-nobe/relative_resonance_decay/blob/main/final_project/TLorentzVector_Boost.PNG)
  
+## Parent Momentum Generation Function:
+- Input: the resonance mass (generated from a BreitWigner distribution)
+- Output: the FourMomentum of the resonance particle
+- Step 3 of from [readme.md](https://github.com/mahmud-nobe/relative_resonance_decay/blob/main/final_project/readme.md)
+ 
 ## Resonace Decay Function: 
 - Returns the daughter particles' FourMomentums in lab frame (or maybe invariant mass)
 - Input: the FourMoementum of resonance particle in its rest frame
