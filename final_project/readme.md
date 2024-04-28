@@ -6,11 +6,13 @@
 	- use gRandom->BreitWigner function from root
 	
 3. Choose the FourMomentum of the resonance particle in the particle rest frame
-	- all momentum are in z axis
-	- one choice for $p_z$ = sqrt(sNN)/2
+	- transfer momentum, P_T = 2 GeV/c^2
+	- psudo-rapidity, eta: uniform between -0.5, 0.5
+	- phi: isotropic: uniform between 0 to 2pi
+	- get p_x, p\_y, p\_z, E from P\_T, eta and phi
 	
-4. Assume isotropic decay:
-	- eta: from an uniform distribution between -0.5,0.5 (use rand() function)
+4. Assume isotropic decay for the daughter particles:
+	- cos theta: from an uniform distribution between -1,1 (use rand() function)
 	- phi: isotropic - uniform distribution from 0 to 2*pi (use rand() function)
 	
 5. Generate the daughter particles' FourMomentum in the resonance particle rest frame
