@@ -21,10 +21,10 @@ const double LIFETIME_RES = 2.632e-10; // Resonance lifetime in seconds
 const int PDG_RES = 3122; // PDG code of the resonance (Lambda)
 
 // Define the decay products and their properties
-const double M_PROTON = 0.938272; // Proton mass in GeV/c^2
-const double M_PION = 0.139570; // Pion mass in GeV/c^2
-const int PDG_PROTON = 2212; // PDG code of the proton
-const int PDG_PION = 211; // PDG code of the pion
+const double M_NEUTRON = 0.938272; // NEUTRON mass in GeV/c^2
+const double M_KAON = 0.139570; // KAON mass in GeV/c^2
+const int PDG_NEUTRON = 2212; // PDG code of the NEUTRON
+const int PDG_KAON = 211; // PDG code of the KAON
 
 // Define the collision energy
 const double SQRT_SNN = 200.0; // Center-of-mass energy in GeV
@@ -120,25 +120,25 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance) {
     double eta = rand()/RAND_MAX - 0.5 // eta [-0.5, 0.5]
 
     // Calculate the momentum of the daughter particles in the rest frame
-    double P_d = sqrt((M*M - M_PROTON*M_PROTON - M_PION*M_PION)*(M*M - M_PROTON*M_PROTON - M_PION*M_PION)
-            - 4.0*M_PROTON*M_PROTON*M_PION*M_PION)/(2.0*M_RES);
-    double E_d_PROTON = sqrt(P_d*P_d + M_PROTON*M_PROTON);
-    double E_d_PION = sqrt(P_d*P_d + M_PION*M_PION);
+    double P_d = sqrt((M*M - M_NEUTRON*M_NEUTRON - M_KAON*M_KAON)*(M*M - M_NEUTRON*M_NEUTRON - M_KAON*M_KAON)
+            - 4.0*M_NEUTRON*M_NEUTRON*M_KAON*M_KAON)/(2.0*M_RES);
+    double E_d_NEUTRON = sqrt(P_d*P_d + M_NEUTRON*M_NEUTRON);
+    double E_d_KAON = sqrt(P_d*P_d + M_KAON*M_KAON);
     
     double P_T = P_d / cosh(eta);
 
     // Calculate the 4-momenta of the daughter particles in the rest frame
-    FourMomentum proton(P_T*cos(phi), P_T*sin(phi), P_T*sinh(eta), E_d_PROTON, PDG_PROTON);
-    FourMomentum pion(-P_T*cos(phi), -P_T*sin(phi), -P_T*sinh(eta), E_d_PION, PDG_PION);
+    FourMomentum NEUTRON(P_T*cos(phi), P_T*sin(phi), P_T*sinh(eta), E_d_NEUTRON, PDG_NEUTRON);
+    FourMomentum KAON(-P_T*cos(phi), -P_T*sin(phi), -P_T*sinh(eta), E_d_KAON, PDG_KAON);
 
-    //cout<< pion.Pz()<<" " <<endl;
+    //cout<< KAON.Pz()<<" " <<endl;
     // Boost the daughter particles to the lab frame
-    FourMomentum proton_lab = proton.Boost(resonance);
-    FourMomentum pion_lab = pion.Boost(resonance);
-   //cout<<proton_lab.Pz()<<endl;
+    FourMomentum NEUTRON_lab = NEUTRON.Boost(resonance);
+    FourMomentum KAON_lab = KAON.Boost(resonance);
+   //cout<<NEUTRON_lab.Pz()<<endl;
     
-    daughters.push_back(proton_lab);
-    daughters.push_back(pion_lab);
+    daughters.push_back(NEUTRON_lab);
+    daughters.push_back(KAON_lab);
 
     return daughters;
 }
