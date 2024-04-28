@@ -2,7 +2,7 @@
 #include <fstream>
 #include <random>
 #include <vector>
-#include <TRandom.h>
+#include <TRandom.h>  
 #include "TH1F.h"
 #include "TF1.h"
 #include "TCanvas.h"
@@ -34,7 +34,7 @@ const double SQRT_SNN = 200.0; // Center-of-mass energy in GeV
 
 // Define the momentum resolution
 //const double MOM_RES = 0.0000001; // Momentum resolution (1%)
-const double MOM_WIDTH = 0.0000005; // std for gaussian smearing of daughter momentum
+const double MOM_WIDTH = 0.005; // std for gaussian smearing of daughter momentum
 
 ///////////////////////////////////
 // FourMomentum Class Definition //
@@ -178,9 +178,10 @@ FourMomentum GetParentMomentum(double m_res){
     
     double P_T = 2; // 2 GeV/c^2
     double m_T = sqrt( P_T*P_T + m_res*m_res);
+    double E_res = sqrt( pow(P_T*cosh(eta), 2) + m_res*m_res ); 
     
     // Calculate the 4-momenta of the resonance particles in the rest frame
-    FourMomentum resonance(P_T*cos(phi), P_T*sin(phi), m_T*sinh(eta), m_T*cosh(eta), PDG_RES);
+    FourMomentum resonance(P_T*cos(phi), P_T*sin(phi), P_T*sinh(eta), E_res, PDG_RES);
    
    	return resonance;
 }
@@ -241,13 +242,14 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 		
 		  	// Fill the invariant mass histogram
 		  	// h_mass->Fill(inv_mass);
-		  	h_mass->Fill(rng.Gaus(inv_mass, inv_mass*0.005));
-		  	h_mass_rest->Fill(rng.Gaus(inv_mass, inv_mass*0.005));
+		  	h_mass->Fill(rng.Gaus(inv_mass, inv_mass*MOM_WIDTH));
+		  	h_mass_rest->Fill(rng.Gaus(inv_mass, inv_mass*MOM_WIDTH));
 
 		  	// Generate uncorrelated background events
 		  	int j=0;
 		  	while(j<N_BG){
-		  		double bg_inv_mass = rng.Uniform(h_mass->GetXaxis()->GetXmin(), h_mass->GetXaxis()->GetXmax());
+		  		double bg_inv_mass = rng.Uniform(M_RES - 4*WIDTH_RES, M_RES + 4*WIDTH_RES);
+		  		
 		  		h_bg->Fill(bg_inv_mass);
 		  		j++;
 				}
@@ -272,8 +274,17 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
    	legend->AddEntry(h_mass,"Resonance Signal","l");
    	legend->AddEntry(h_mass_rest,"Resonance Signal (Rest Frame)","l");
    	legend->AddEntry(h_bg,"Background","l");
-   	legend->Draw();
+   	legend->Draw("SAME");
 	
+		// TH1F* h_poisson = new TH1F("h_poisson", "Background", 100, M_RES - 4*WIDTH_RES, M_RES + 4*WIDTH_RES);
+		
+		// for (int k=0; k<1000; k++){
+			// double bg_poisson = rng.Poisson(1.5);
+			// std:cout << bg_poisson <<endl;
+			// h_poisson->Fill(bg_poisson);
+		//} 
+		
+		// h_poisson->Draw();
 		//f->Write();
 		//f->Close();
 		
@@ -282,6 +293,7 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 		double bg = h_bg->Integral(h_bg->FindBin(M_RES - 3.0*WIDTH_RES), h_bg->FindBin(M_RES + 3.0*WIDTH_RES));
 		std::cout << "Number of signal events: " << signal << std::endl;
 		std::cout << "Number of background events: " << bg << std::endl;
+		std::cout << "Signal to Background Ratio: " << signal/bg << std::endl;
 		
 		return 0;
 }
