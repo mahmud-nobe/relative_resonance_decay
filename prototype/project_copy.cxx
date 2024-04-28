@@ -151,8 +151,8 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 
     // Initialize histograms for the invariant mass and background
     TFile *f=new TFile("lorenz.root","RECREATE");
-    TH1F* h_mass = new TH1F("h_mass", "Invariant Mass", 100, 1.08, 1.15);
-    TH1F* h_bg = new TH1F("h_bg", "Background", 100, 1.08, 1.15);
+    TH1F* h_mass = new TH1F("h_mass", "Invariant Mass", 100, 1.49, 1.55);
+    TH1F* h_bg = new TH1F("h_bg", "Background", 100, 1.49, 1.55);
 
     // Initialize the random number generator
     TRandom3 rng;
