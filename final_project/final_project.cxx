@@ -47,7 +47,7 @@ class FourMomentum {
 
    public:
       // Constructor
-      FourMomentum(); // Default Constuctor
+      FourMomentum(); // Default Constructor
       // Constructor with four components and particle type
  	  	FourMomentum(double px, double py, double pz, double e, int pdgCode_) : vec(px, py, pz, e), pdgCode(pdgCode_) {}
  	  	// Constructor with Lorentz vector and particle type
