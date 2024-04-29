@@ -49,34 +49,34 @@ class FourMomentum {
       // Constructor
       FourMomentum(); // Default Constructor
       // Constructor with four components and particle type
- 	  	FourMomentum(double px, double py, double pz, double e, int pdgCode_) : vec(px, py, pz, e), pdgCode(pdgCode_) {}
- 	  	// Constructor with Lorentz vector and particle type
+      FourMomentum(double px, double py, double pz, double e, int pdgCode_) : vec(px, py, pz, e), pdgCode(pdgCode_) {}
+      // Constructor with Lorentz vector and particle type
       FourMomentum(TLorentzVector v, int pdgCode_) : vec(v), pdgCode(pdgCode_) {}
 	
-			// Getters
+      // Getters
       TLorentzVector L_vec() const {return vec;}
       double Px() const { return vec.Px(); }
       double Py() const { return vec.Py(); }
       double Pz() const { return vec.Pz(); }
       double E() const { return vec.E(); }
       
-      // Setters
-			void SetPx(double px) { vec.SetPx(px); }
-			void SetPy(double py) { vec.SetPy(py); }
-			void SetPz(double pz) { vec.SetPz(pz); }
-			void SetE(double e) { vec.SetE(e); }
-			void SetPdgCode(int pdgCode_) { pdgCode = pdgCode_; }	
-	
-			//operators
-			FourMomentum operator + (FourMomentum &);
-			FourMomentum operator - (FourMomentum &);
-	
-			// Other functions
-			double Pt() const { return vec.Pt(); } // sqrt(vec.Px()^2 + vec.Py()^2 )
-			double P() const { return vec.P(); } // sqrt( vec.Px()^2 + vec.Py()^2 + vec.Pz()^2 )
-			// dot product = invariant mass
-			double M() const { return vec.M(); } // sqrt( vec.E()^2 - vec.P()^2 )
-			FourMomentum Boost(const FourMomentum& resonance);
+        // Setters
+        void SetPx(double px) { vec.SetPx(px); }
+        void SetPy(double py) { vec.SetPy(py); }
+        void SetPz(double pz) { vec.SetPz(pz); }
+        void SetE(double e) { vec.SetE(e); }
+        void SetPdgCode(int pdgCode_) { pdgCode = pdgCode_; }	
+        
+        //operators
+        FourMomentum operator + (FourMomentum &);
+        FourMomentum operator - (FourMomentum &);
+        
+        // Other functions
+        double Pt() const { return vec.Pt(); } // sqrt(vec.Px()^2 + vec.Py()^2 )
+        double P() const { return vec.P(); } // sqrt( vec.Px()^2 + vec.Py()^2 + vec.Pz()^2 )
+        // dot product = invariant mass
+        double M() const { return vec.M(); } // sqrt( vec.E()^2 - vec.P()^2 )
+        FourMomentum Boost(const FourMomentum& resonance);
 
       void Print() const {
          std::cout << "(" << Px() << ", " << Py() << ", " << Pz() << ", " << E() << ")" << std::endl;
@@ -89,7 +89,7 @@ class FourMomentum {
 
 FourMomentum FourMomentum::Boost(const FourMomentum& resonance) 
 {
-		// Get the boost vector from the resonance FourMomentum
+    // Get the boost vector from the resonance FourMomentum
     // boost_v = Px/E, Py/E, Pz/E
     TVector3 boost_v = resonance.L_vec().BoostVector();
          
@@ -97,7 +97,7 @@ FourMomentum FourMomentum::Boost(const FourMomentum& resonance)
     TLorentzVector new_vec = vec;
          
     // Boost this Lorentz Vector using boost_v
-		new_vec.Boost(boost_v); // in place boosted momentum
+    new_vec.Boost(boost_v); // in place boosted momentum
 	
     return FourMomentum(new_vec, pdgCode);
 }
@@ -105,12 +105,12 @@ FourMomentum FourMomentum::Boost(const FourMomentum& resonance)
 
 FourMomentum FourMomentum::operator+(FourMomentum &m)
 {
-		return FourMomentum(vec.Px()+m.Px(),vec.Py()+m.Py(),vec.Pz()+m.Pz(),vec.E()+m.E(), pdgCode);
+    return FourMomentum(vec.Px()+m.Px(),vec.Py()+m.Py(),vec.Pz()+m.Pz(),vec.E()+m.E(), pdgCode);
 }
 
 FourMomentum FourMomentum::operator-(FourMomentum &m)
 {
-		return FourMomentum(vec.Px()-m.Px(),vec.Py()-m.Py(),vec.Pz()-m.Pz(),vec.E()-m.E(), pdgCode);
+    return FourMomentum(vec.Px()-m.Px(),vec.Py()-m.Py(),vec.Pz()-m.Pz(),vec.E()-m.E(), pdgCode);
 }
 
 
@@ -148,19 +148,18 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance, int boos
     FourMomentum neutron(P_d*sin(theta)*cos(phi), P_d*sin(theta)*sin(phi), P_d*cos(theta), E_d_NEUTRON, PDG_NEUTRON);
     FourMomentum kaon(-P_d*sin(theta)*cos(phi), -P_d*sin(theta)*sin(phi), -P_d*cos(theta), E_d_KAON, PDG_KAON);
 
-		// Boost the daughter particles to the lab frame
-		FourMomentum neutron_lab = neutron.Boost(resonance);
-		FourMomentum kaon_lab = kaon.Boost(resonance);
+    // Boost the daughter particles to the lab frame
+    FourMomentum neutron_lab = neutron.Boost(resonance);
+    FourMomentum kaon_lab = kaon.Boost(resonance);
 
     if (boost) {	// boosted momentum in lab frame			
-				daughters.push_back(neutron_lab);
-    		daughters.push_back(kaon_lab);
-		}
-		else{  // momentum in rest frame	 
-				daughters.push_back(neutron);
-    		daughters.push_back(kaon);
-		};
-    
+	daughters.push_back(neutron_lab);
+    	daughters.push_back(kaon_lab);
+    }
+    else{  // momentum in rest frame	 
+	daughters.push_back(neutron);
+    	daughters.push_back(kaon);
+    };
     
     return daughters;
 }
@@ -171,7 +170,7 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance, int boos
 
 FourMomentum GetParentMomentum(double m_res){
 
-		// Generate random decay angles in the rest frame
+    // Generate random decay angles in the rest frame
     // rand()/RAND_MAX --> any random number between 0 and 1
     double phi = 2.0*3.14159*rand()/RAND_MAX;  // uniform distribution between 0 and 2pi
     double eta = rand()/RAND_MAX - 0.5; // eta [-0.5, 0.5]
@@ -183,7 +182,7 @@ FourMomentum GetParentMomentum(double m_res){
     // Calculate the 4-momenta of the resonance particles in the rest frame
     FourMomentum resonance(P_T*cos(phi), P_T*sin(phi), P_T*sinh(eta), E_res, PDG_RES);
    
-   	return resonance;
+    return resonance;
 }
 
 ///////////////////////////
@@ -199,9 +198,9 @@ FourMomentum GetParentMomentum(double m_res){
 
 int project_copy(int n_events = 10000, int n_bg = 10) {
 
-		// Define the number of events and background particles
-		const int N_EVENTS = n_events; // Number of events	
-		const int N_BG = n_bg; // Number of background particles per event
+    // Define the number of events and background particles
+    const int N_EVENTS = n_events; // Number of events	
+    const int N_BG = n_bg; // Number of background particles per event
 
     // Initialize histograms for the invariant mass and background
     //TFile *f=new TFile("lorenz.root","RECREATE");
@@ -221,61 +220,58 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
         FourMomentum resonance = GetParentMomentum(m_res);
 
         // Decay the resonance particle
-    		std::vector<FourMomentum> daughters = ResonanceDecay(resonance);
-    		
-    		std::vector<FourMomentum> daughters_rest = ResonanceDecay(resonance, 0); // boost = 0  to get the rest frame momentum
-
+    	std::vector<FourMomentum> daughters = ResonanceDecay(resonance);
+    	std::vector<FourMomentum> daughters_rest = ResonanceDecay(resonance, 0); // boost = 0  to get the rest frame momentum
 	
+    	// Add Gaussian smearing to the daughter particle momenta
+	for (auto& daughter : daughters) {
+	daughter.SetPx(rng.Gaus(daughter.Px(), daughter.Px()*MOM_WIDTH));
+	daughter.SetPy(rng.Gaus(daughter.Py(), daughter.Py()*MOM_WIDTH));
+	daughter.SetPz(rng.Gaus(daughter.Pz(), daughter.Pz()*MOM_WIDTH));
+	daughter.SetE(abs(rng.Gaus(daughter.E(), daughter.E()*MOM_WIDTH)));
+	}
 	
-    		// Add Gaussian smearing to the daughter particle momenta
-		  	for (auto& daughter : daughters) {
-		      	daughter.SetPx(rng.Gaus(daughter.Px(), daughter.Px()*MOM_WIDTH));
-		      	daughter.SetPy(rng.Gaus(daughter.Py(), daughter.Py()*MOM_WIDTH));
-		      	daughter.SetPz(rng.Gaus(daughter.Pz(), daughter.Pz()*MOM_WIDTH));
-		      	daughter.SetE(abs(rng.Gaus(daughter.E(), daughter.E()*MOM_WIDTH)));
-		  	}
-		  	
-		  	// Add Gaussian smearing to the daughter particle momenta in the rest frame
-		  	for (auto& daughter_rest : daughters_rest) {
-		      	daughter_rest.SetPx(rng.Gaus(daughter_rest.Px(), daughter_rest.Px()*MOM_WIDTH));
-		      	daughter_rest.SetPy(rng.Gaus(daughter_rest.Py(), daughter_rest.Py()*MOM_WIDTH));
-		      	daughter_rest.SetPz(rng.Gaus(daughter_rest.Pz(), daughter_rest.Pz()*MOM_WIDTH));
-		      	daughter_rest.SetE(abs(rng.Gaus(daughter_rest.E(), daughter_rest.E()*MOM_WIDTH)));
-		  	}
-  
+	// Add Gaussian smearing to the daughter particle momenta in the rest frame
+	for (auto& daughter_rest : daughters_rest) {
+	daughter_rest.SetPx(rng.Gaus(daughter_rest.Px(), daughter_rest.Px()*MOM_WIDTH));
+	daughter_rest.SetPy(rng.Gaus(daughter_rest.Py(), daughter_rest.Py()*MOM_WIDTH));
+	daughter_rest.SetPz(rng.Gaus(daughter_rest.Pz(), daughter_rest.Pz()*MOM_WIDTH));
+	daughter_rest.SetE(abs(rng.Gaus(daughter_rest.E(), daughter_rest.E()*MOM_WIDTH)));
+	}
 
-		  	// Calculate the invariant mass of the daughter particles
-		 		double inv_mass = (daughters[0] + daughters[1]).M();
-		 		double inv_mass_rest = (daughters_rest[0] + daughters_rest[1]).M();
-		
-		  	// Fill the invariant mass histogram
-		  	// h_mass->Fill(inv_mass);
-		  	h_mass->Fill(rng.Gaus(inv_mass, inv_mass*MOM_WIDTH));
-		  	h_mass_rest->Fill(rng.Gaus(inv_mass_rest, inv_mass_rest*MOM_WIDTH));
 
-		  	// Generate uncorrelated background events
-		  	int j=0;
-		  	while(j<N_BG){
-		  		double bg_inv_mass = rng.Uniform(M_RES - 4*WIDTH_RES, M_RES + 4*WIDTH_RES);
-		  		h_bg->Fill(bg_inv_mass);
-		  		j++;
-				}
+	// Calculate the invariant mass of the daughter particles
+		double inv_mass = (daughters[0] + daughters[1]).M();
+		double inv_mass_rest = (daughters_rest[0] + daughters_rest[1]).M();
+
+	// Fill the invariant mass histogram
+	// h_mass->Fill(inv_mass);
+	h_mass->Fill(rng.Gaus(inv_mass, inv_mass*MOM_WIDTH));
+	h_mass_rest->Fill(rng.Gaus(inv_mass_rest, inv_mass_rest*MOM_WIDTH));
+
+	// Generate uncorrelated background events
+	int j=0;
+	while(j<N_BG){
+		double bg_inv_mass = rng.Uniform(M_RES - 4*WIDTH_RES, M_RES + 4*WIDTH_RES);
+		h_bg->Fill(bg_inv_mass);
+		j++;
+	}
     }
 		
-		// Draw the histograms
+	// Draw the histograms
 
-		h_mass->SetLineColor(kRed);
-		h_mass->GetXaxis()->SetTitle("Invariant Mass [GeV/c^{2}]");
-		h_mass->GetYaxis()->SetTitle("Counts");
-		h_mass->Add(h_bg);
-		h_mass->Draw();
-		
-		h_mass_rest->SetLineColor(kOrange);
-		h_mass_rest->Add(h_bg);
-		//h_mass_rest->Draw();
-		
-		h_bg->SetLineColor(kBlue);
-		h_bg->Draw("SAME");
+	h_mass->SetLineColor(kRed);
+	h_mass->GetXaxis()->SetTitle("Invariant Mass [GeV/c^{2}]");
+	h_mass->GetYaxis()->SetTitle("Counts");
+	h_mass->Add(h_bg);
+	h_mass->Draw();
+	
+	h_mass_rest->SetLineColor(kOrange);
+	h_mass_rest->Add(h_bg);
+	//h_mass_rest->Draw();
+	
+	h_bg->SetLineColor(kBlue);
+	h_bg->Draw("SAME");
 		
    	auto legend = new TLegend();
    	legend->AddEntry(h_mass,"Resonance Signal","l");
@@ -283,14 +279,14 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
    	legend->AddEntry(h_bg,"Background","l");
    	legend->Draw("SAME");
 	
-		//f->Write();
-		//f->Close();
-		
-		// Print the number of signal and background events in the signal region
-		double signal = h_mass->Integral(h_mass->FindBin(M_RES - 4.0*WIDTH_RES), h_mass->FindBin(M_RES + 4.0*WIDTH_RES));
-		double bg = h_bg->Integral(h_bg->FindBin(M_RES - 4.0*WIDTH_RES), h_bg->FindBin(M_RES + 4.0*WIDTH_RES));
-		std::cout << "Number of signal events: " << signal << std::endl;
-		std::cout << "Number of background events: " << bg << std::endl;
-		
-		return 0;
+	//f->Write();
+	//f->Close();
+	
+	// Print the number of signal and background events in the signal region
+	double signal = h_mass->Integral(h_mass->FindBin(M_RES - 4.0*WIDTH_RES), h_mass->FindBin(M_RES + 4.0*WIDTH_RES));
+	double bg = h_bg->Integral(h_bg->FindBin(M_RES - 4.0*WIDTH_RES), h_bg->FindBin(M_RES + 4.0*WIDTH_RES));
+	std::cout << "Number of signal events: " << signal << std::endl;
+	std::cout << "Number of background events: " << bg << std::endl;
+	
+	return 0;
 }
