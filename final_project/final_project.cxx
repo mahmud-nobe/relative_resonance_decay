@@ -224,18 +224,18 @@ int final_project(int n_events = 10000, int n_bg = 10) {
 	
     	// Add Gaussian smearing to the daughter particle momenta
 	for (auto& daughter : daughters) {
-	daughter.SetPx(rng.Gaus(daughter.Px(), daughter.Px()*MOM_WIDTH));
-	daughter.SetPy(rng.Gaus(daughter.Py(), daughter.Py()*MOM_WIDTH));
-	daughter.SetPz(rng.Gaus(daughter.Pz(), daughter.Pz()*MOM_WIDTH));
-	daughter.SetE(abs(rng.Gaus(daughter.E(), daughter.E()*MOM_WIDTH)));
+		daughter.SetPx(rng.Gaus(daughter.Px(), daughter.Px()*MOM_WIDTH));
+		daughter.SetPy(rng.Gaus(daughter.Py(), daughter.Py()*MOM_WIDTH));
+		daughter.SetPz(rng.Gaus(daughter.Pz(), daughter.Pz()*MOM_WIDTH));
+		daughter.SetE(abs(rng.Gaus(daughter.E(), daughter.E()*MOM_WIDTH)));
 	}
 	
 	// Add Gaussian smearing to the daughter particle momenta in the rest frame
 	for (auto& daughter_rest : daughters_rest) {
-	daughter_rest.SetPx(rng.Gaus(daughter_rest.Px(), daughter_rest.Px()*MOM_WIDTH));
-	daughter_rest.SetPy(rng.Gaus(daughter_rest.Py(), daughter_rest.Py()*MOM_WIDTH));
-	daughter_rest.SetPz(rng.Gaus(daughter_rest.Pz(), daughter_rest.Pz()*MOM_WIDTH));
-	daughter_rest.SetE(abs(rng.Gaus(daughter_rest.E(), daughter_rest.E()*MOM_WIDTH)));
+		daughter_rest.SetPx(rng.Gaus(daughter_rest.Px(), daughter_rest.Px()*MOM_WIDTH));
+		daughter_rest.SetPy(rng.Gaus(daughter_rest.Py(), daughter_rest.Py()*MOM_WIDTH));
+		daughter_rest.SetPz(rng.Gaus(daughter_rest.Pz(), daughter_rest.Pz()*MOM_WIDTH));
+		daughter_rest.SetE(abs(rng.Gaus(daughter_rest.E(), daughter_rest.E()*MOM_WIDTH)));
 	}
 
 
