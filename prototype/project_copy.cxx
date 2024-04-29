@@ -234,6 +234,14 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 		      	daughter.SetPz(rng.Gaus(daughter.Pz(), daughter.Pz()*MOM_WIDTH));
 		      	daughter.SetE(abs(rng.Gaus(daughter.E(), daughter.E()*MOM_WIDTH)));
 		  	}
+		  	
+		  	// Add Gaussian smearing to the daughter particle momenta in rest frame
+		  	for (auto& daughter_rest : daughters_rest) {
+		      	daughter_rest.SetPx(rng.Gaus(daughter_rest.Px(), daughter_rest.Px()*MOM_WIDTH));
+		      	daughter_rest.SetPy(rng.Gaus(daughter_rest.Py(), daughter_rest.Py()*MOM_WIDTH));
+		      	daughter_rest.SetPz(rng.Gaus(daughter_rest.Pz(), daughter_rest.Pz()*MOM_WIDTH));
+		      	daughter_rest.SetE(abs(rng.Gaus(daughter_rest.E(), daughter_rest.E()*MOM_WIDTH)));
+		  	}
   
 
 		  	// Calculate the invariant mass of the daughter particles
@@ -243,13 +251,12 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 		  	// Fill the invariant mass histogram
 		  	// h_mass->Fill(inv_mass);
 		  	h_mass->Fill(rng.Gaus(inv_mass, inv_mass*MOM_WIDTH));
-		  	h_mass_rest->Fill(rng.Gaus(inv_mass, inv_mass*MOM_WIDTH));
+		  	h_mass_rest->Fill(rng.Gaus(inv_mass_rest, inv_mass_rest*MOM_WIDTH));
 
 		  	// Generate uncorrelated background events
 		  	int j=0;
 		  	while(j<N_BG){
 		  		double bg_inv_mass = rng.Uniform(M_RES - 4*WIDTH_RES, M_RES + 4*WIDTH_RES);
-		  		
 		  		h_bg->Fill(bg_inv_mass);
 		  		j++;
 				}
@@ -265,14 +272,14 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 		
 		h_mass_rest->SetLineColor(kOrange);
 		h_mass_rest->Add(h_bg);
-		h_mass_rest->Draw("SAME");
+		// h_mass_rest->Draw();
 		
 		h_bg->SetLineColor(kBlue);
 		h_bg->Draw("SAME");
 		
    	auto legend = new TLegend();
    	legend->AddEntry(h_mass,"Resonance Signal","l");
-   	legend->AddEntry(h_mass_rest,"Resonance Signal (Rest Frame)","l");
+   	//legend->AddEntry(h_mass_rest,"Signal (Rest Frame)","l");
    	legend->AddEntry(h_bg,"Background","l");
    	legend->Draw("SAME");
 	
@@ -289,11 +296,10 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 		//f->Close();
 		
 		// Print the number of signal and background events in the signal region
-		double signal = h_mass->Integral(h_mass->FindBin(M_RES - 3.0*WIDTH_RES), h_mass->FindBin(M_RES + 3.0*WIDTH_RES));
-		double bg = h_bg->Integral(h_bg->FindBin(M_RES - 3.0*WIDTH_RES), h_bg->FindBin(M_RES + 3.0*WIDTH_RES));
+		double signal = h_mass->Integral(h_mass->FindBin(M_RES - 4.0*WIDTH_RES), h_mass->FindBin(M_RES + 4.0*WIDTH_RES));
+		double bg = h_bg->Integral(h_bg->FindBin(M_RES - 4.0*WIDTH_RES), h_bg->FindBin(M_RES + 4.0*WIDTH_RES));
 		std::cout << "Number of signal events: " << signal << std::endl;
 		std::cout << "Number of background events: " << bg << std::endl;
-		std::cout << "Signal to Background Ratio: " << signal/bg << std::endl;
 		
 		return 0;
 }
