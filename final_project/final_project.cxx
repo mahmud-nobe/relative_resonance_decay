@@ -135,9 +135,9 @@ std::vector<FourMomentum> ResonanceDecay(const FourMomentum& resonance, int boos
     double phi = 2.0*3.14159*rand()/RAND_MAX;  // uniform distribution between 0 and 2pi
 
     // Calculate the momentum of the daughter particles in the rest frame
-    double P_d = sqrt((M*M - M_NEUTRON*M_NEUTRON - M_KAON*M_KAON)*(M*M - M_NEUTRON*M_NEUTRON - M_KAON*M_KAON) - 4.0*M_NEUTRON*M_NEUTRON*M_KAON*M_KAON)/(2.0*M_RES);
+    double P_d = sqrt((M*M - M_NEUTRON*M_NEUTRON - M_KAON*M_KAON)*(M*M - M_NEUTRON*M_NEUTRON - M_KAON*M_KAON) - 4.0*M_NEUTRON*M_NEUTRON*M_KAON*M_KAON)/(2.0*M);
     
-    // double P_d = sqrt( ( pow(M_RES, 2) - pow(M_NEUTRON - M_KAON, 2) ) * ( pow(M_RES, 2) - pow(M_NEUTRON + M_KAON, 2) ) ) / 2*M_RES;
+    // double P_d_test = sqrt( ( pow(M, 2.0) - pow(M_NEUTRON - M_KAON, 2.0) ) * ( pow(M, 2.0) - pow(M_NEUTRON + M_KAON, 2.0) ) ) / 2.0*M;
     
     double E_d_NEUTRON = sqrt(P_d*P_d + M_NEUTRON*M_NEUTRON);
     double E_d_KAON = sqrt(P_d*P_d + M_KAON*M_KAON);
