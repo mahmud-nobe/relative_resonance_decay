@@ -33,7 +33,6 @@ const int PDG_KAON = 211; // PDG code of the KAON
 const double SQRT_SNN = 200.0; // Center-of-mass energy in GeV
 
 // Define the momentum resolution
-//const double MOM_RES = 0.0000001; // Momentum resolution (1%)
 const double MOM_WIDTH = 0.005; // std for gaussian smearing of daughter momentum
 
 ///////////////////////////////////
@@ -196,7 +195,7 @@ FourMomentum GetParentMomentum(double m_res){
 // Save the invariant mass of daughter particles generated in each event
 // Plot the histogram of invariant mass for both signal and background
 
-int project_copy(int n_events = 10000, int n_bg = 10) {
+int final_project(int n_events = 10000, int n_bg = 10) {
 
     // Define the number of events and background particles
     const int N_EVENTS = n_events; // Number of events	
