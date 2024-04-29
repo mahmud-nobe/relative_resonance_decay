@@ -61,21 +61,21 @@ class FourMomentum {
       double E() const { return vec.E(); }
       
       // Setters
-    	void SetPx(double px) { vec.SetPx(px); }
-    	void SetPy(double py) { vec.SetPy(py); }
-    	void SetPz(double pz) { vec.SetPz(pz); }
-    	void SetE(double e) { vec.SetE(e); }
-    	void SetPdgCode(int pdgCode_) { pdgCode = pdgCode_; }
-    	
-    	//operators
+			void SetPx(double px) { vec.SetPx(px); }
+			void SetPy(double py) { vec.SetPy(py); }
+			void SetPz(double pz) { vec.SetPz(pz); }
+			void SetE(double e) { vec.SetE(e); }
+			void SetPdgCode(int pdgCode_) { pdgCode = pdgCode_; }	
+	
+			//operators
 			FourMomentum operator + (FourMomentum &);
 			FourMomentum operator - (FourMomentum &);
-
-    	// Other functions
-    	double Pt() const { return vec.Pt(); } // sqrt(vec.Px()^2 + vec.Py()^2 )
-    	double P() const { return vec.P(); } // sqrt( vec.Px()^2 + vec.Py()^2 + vec.Pz()^2 )
-    	// dot product = invariant mass
-    	double M() const { return vec.M(); } // sqrt( vec.E()^2 - vec.P()^2 )
+	
+			// Other functions
+			double Pt() const { return vec.Pt(); } // sqrt(vec.Px()^2 + vec.Py()^2 )
+			double P() const { return vec.P(); } // sqrt( vec.Px()^2 + vec.Py()^2 + vec.Pz()^2 )
+			// dot product = invariant mass
+			double M() const { return vec.M(); } // sqrt( vec.E()^2 - vec.P()^2 )
 			FourMomentum Boost(const FourMomentum& resonance);
 
       void Print() const {
@@ -89,7 +89,7 @@ class FourMomentum {
 
 FourMomentum FourMomentum::Boost(const FourMomentum& resonance) 
 {
-		// get the boost vector from the resonace fourMomentum
+		// Get the boost vector from the resonance FourMomentum
     // boost_v = Px/E, Py/E, Pz/E
     TVector3 boost_v = resonance.L_vec().BoostVector();
          
@@ -192,7 +192,7 @@ FourMomentum GetParentMomentum(double m_res){
 
 // Input: 
 // n_events = total number of events (decay of resonance particle)
-// n_bg = total number of uncorrelated background event per each event
+// n_bg = total number of uncorrelated background events per each event
 
 // Save the invariant mass of daughter particles generated in each event
 // Plot the histogram of invariant mass for both signal and background
@@ -235,7 +235,7 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 		      	daughter.SetE(abs(rng.Gaus(daughter.E(), daughter.E()*MOM_WIDTH)));
 		  	}
 		  	
-		  	// Add Gaussian smearing to the daughter particle momenta in rest frame
+		  	// Add Gaussian smearing to the daughter particle momenta in the rest frame
 		  	for (auto& daughter_rest : daughters_rest) {
 		      	daughter_rest.SetPx(rng.Gaus(daughter_rest.Px(), daughter_rest.Px()*MOM_WIDTH));
 		      	daughter_rest.SetPy(rng.Gaus(daughter_rest.Py(), daughter_rest.Py()*MOM_WIDTH));
@@ -272,7 +272,7 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
 		
 		h_mass_rest->SetLineColor(kOrange);
 		h_mass_rest->Add(h_bg);
-		// h_mass_rest->Draw();
+		//h_mass_rest->Draw();
 		
 		h_bg->SetLineColor(kBlue);
 		h_bg->Draw("SAME");
@@ -283,15 +283,6 @@ int project_copy(int n_events = 10000, int n_bg = 10) {
    	legend->AddEntry(h_bg,"Background","l");
    	legend->Draw("SAME");
 	
-		// TH1F* h_poisson = new TH1F("h_poisson", "Background", 100, M_RES - 4*WIDTH_RES, M_RES + 4*WIDTH_RES);
-		
-		// for (int k=0; k<1000; k++){
-			// double bg_poisson = rng.Poisson(1.5);
-			// std:cout << bg_poisson <<endl;
-			// h_poisson->Fill(bg_poisson);
-		//} 
-		
-		// h_poisson->Draw();
 		//f->Write();
 		//f->Close();
 		
