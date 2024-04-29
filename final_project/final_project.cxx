@@ -41,8 +41,8 @@ const double MOM_WIDTH = 0.005; // std for gaussian smearing of daughter momentu
 
 class FourMomentum {
    private:
-      TLorentzVector vec;
-      int pdgCode;
+      TLorentzVector vec; // 4D Momentum
+      int pdgCode;        // Particle Type
 
    public:
       // Constructor
